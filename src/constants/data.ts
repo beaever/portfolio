@@ -219,12 +219,14 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     description:
       '호주 워킹홀리데이 준비부터 정착까지, 단계별 체크리스트로 완벽하게 준비를 위한 웹,앱 서비스 ',
     technologies: [
-      'ReactNative',
+      'React (web)',
+      'ReactNative (web view 기반 mobile)',
       'Expo',
       'Next.js',
       'TypeScript',
       'Tailwind CSS',
     ],
     githubUrl: 'https://github.com/beaever/wholly',
+    demoUrl: 'https://wholly-web.vercel.app/',
   },
 ];
