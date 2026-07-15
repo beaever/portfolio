@@ -1,0 +1,5 @@
+# pnpm 10+ 는 의존성의 postinstall 을 기본 차단한다.
+# sharp: next/image 이미지 최적화, unrs-resolver: eslint-config-next 의 모듈 해석에 필요.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
