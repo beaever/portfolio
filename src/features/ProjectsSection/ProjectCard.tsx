@@ -14,6 +14,8 @@ interface ProjectCardProps extends PortfolioProject {
 export function ProjectCard({
   title,
   description,
+  period,
+  highlights,
   demoUrl,
   githubUrl,
   technologies,
@@ -32,17 +34,37 @@ export function ProjectCard({
       </div>
 
       <div className='flex-1 space-y-4'>
-        <Text.Heading
-          size='sm'
-          as='h3'
-          className='group-hover:text-[var(--accent-primary)] transition-colors'
-        >
-          {title}
-        </Text.Heading>
+        <div className='space-y-1'>
+          <Text.Heading
+            size='sm'
+            as='h3'
+            className='group-hover:text-[var(--accent-primary)] transition-colors'
+          >
+            {title}
+          </Text.Heading>
+          <span className='text-xs text-[var(--text-tertiary)] font-mono'>
+            {period}
+          </span>
+        </div>
 
         <Text.Body size='sm' color='secondary'>
           {description}
         </Text.Body>
+
+        <ul className='space-y-2'>
+          {highlights.map((highlight, highlightIndex) => (
+            <li
+              key={highlightIndex}
+              className='flex gap-2 text-sm leading-relaxed text-[var(--text-secondary)]'
+            >
+              <span
+                aria-hidden='true'
+                className='mt-2 size-1 shrink-0 rounded-full bg-[var(--accent-primary)]'
+              />
+              <span>{highlight}</span>
+            </li>
+          ))}
+        </ul>
 
         <div className='flex flex-wrap gap-2'>
           {technologies.map((tech, techIndex) => (

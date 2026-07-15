@@ -54,6 +54,8 @@ export interface Achievement {
 export interface PortfolioProject {
   title: string;
   description: string;
+  period: string;
+  highlights: string[];
   technologies: string[];
   demoUrl?: string;
   githubUrl?: string;
