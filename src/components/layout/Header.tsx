@@ -20,11 +20,22 @@ export function Header() {
   const { theme, toggleTheme } = useThemeStore();
 
   useEffect(() => {
+    let frame = 0;
+
+    // passive: 스크롤 블로킹 방지, rAF: 프레임당 1회로 제한
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 50);
+        frame = 0;
+      });
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -59,10 +70,23 @@ export function Header() {
             ))}
             <button
               onClick={toggleTheme}
-              className='w-9 h-9 flex items-center justify-center rounded-lg border border-[var(--border-primary)] hover:bg-[var(--bg-surface)] transition-colors'
-              aria-label='Toggle theme'
+              className='relative w-9 h-9 flex items-center justify-center rounded-lg border border-[var(--border-primary)] hover:bg-[var(--bg-surface)] transition-colors overflow-hidden'
+              aria-label={
+                theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
+              }
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              <AnimatePresence initial={false} mode='wait'>
+                <motion.span
+                  key={theme}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  className='flex items-center justify-center'
+                >
+                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                </motion.span>
+              </AnimatePresence>
             </button>
             <a
               href='#contact'

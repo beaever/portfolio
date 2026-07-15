@@ -129,6 +129,31 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * 테마 토글 순간에만 켜지는 색상 트랜지션.
+ * 대부분의 요소가 var(--bg-primary) 등을 직접 참조하므로 변수 값이 바뀌면 즉시 스냅한다.
+ * 상시 트랜지션은 hover 반응을 둔하게 만들고 페인트 비용도 늘어나므로,
+ * MainLayout 이 전환 동안에만 .theme-transition 을 붙였다 뗀다.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition-property: background-color, border-color, color, fill, stroke,
+      box-shadow, opacity;
+    transition-duration: 400ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @keyframes progress-fill {
   from {
     width: 0%;
