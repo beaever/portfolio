@@ -9,7 +9,7 @@
  */
 
 import { ReactNode } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, TargetAndTransition, Variants } from 'framer-motion';
 import { fadeInUp, staggerContainer, scaleIn } from '@/lib/animations';
 
 interface AnimatedWrapperProps {
@@ -35,13 +35,16 @@ export function AnimatedWrapper({
 
   const selectedVariants = customVariants || variants[variant];
 
-  const animationProps = delay
+  // variant 는 함수형(TargetResolver)일 수도 있으나 delay 를 얹으려면 객체여야 한다.
+  const visible = selectedVariants.visible as TargetAndTransition;
+
+  const animationProps: Variants = delay
     ? {
         ...selectedVariants,
         visible: {
-          ...(selectedVariants.visible as any),
+          ...visible,
           transition: {
-            ...(selectedVariants.visible as any).transition,
+            ...visible.transition,
             delay,
           },
         },

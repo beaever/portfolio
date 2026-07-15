@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 import { AnimatedWrapper } from '@/components/ui/AnimatedWrapper';
-import { AchievementCard } from './AchievementCard';
 import { EXPERIENCES } from '@/constants/data';
 import { fadeInUp, staggerContainer } from '@/lib/animations';
 import { ExperienceCard } from './ExperienceCard';
