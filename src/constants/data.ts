@@ -196,7 +196,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     title: 'WHOLLY',
     description:
       '호주 워킹홀리데이 준비부터 정착까지를 단계별로 안내하는 웹·앱 서비스. 워홀 정보의 문제는 양이 아니라 최신성이라고 보고, 모든 정보에 공식 출처와 검증일을 붙여 신선도 자체를 제품의 핵심으로 설계했습니다.',
-    period: '2026.02 ~ 진행 중 (v1.0.0 출시)',
+    period: '2026.02 ~ 진행 중 (2026.08 iOS 앱 출시)',
     highlights: [
       '사용 비중이 출국 준비에 쏠린다는 점을 근거로 웹을 본체로 두고 모바일은 Expo WebView 셸로 결정. 대신 도메인 로직을 headless 컴포넌트와 디자인 토큰으로 분리해, 네이티브가 필요해지면 화면을 다시 쓰지 않고 어댑터만 추가하도록 남겨뒀습니다.',
       '아키텍처 경계를 문서가 아닌 CI로 강제. dependency-cruiser가 매 PR마다 역방향 import를 차단하고, 디자인 토큰이 어긋나면 머지가 막힙니다. 90%까지 올라갔던 클라이언트 컴포넌트 비율을 46.7%로 되돌린 뒤 임계값 가드로 회귀를 봉쇄했습니다.',
@@ -218,6 +218,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
       'Playwright + Vitest',
     ],
     demoUrl: 'https://wholly-web.vercel.app/',
+    appStoreUrl: 'https://apps.apple.com/kr/app/id6787169213',
   },
   {
     title: 'HYDRAFIT',
