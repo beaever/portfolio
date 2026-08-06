@@ -18,6 +18,7 @@ export function ProjectCard({
   highlights,
   demoUrl,
   githubUrl,
+  appStoreUrl,
   technologies,
   index = 0,
 }: ProjectCardProps) {
@@ -78,7 +79,7 @@ export function ProjectCard({
         </div>
       </div>
 
-      {(demoUrl || githubUrl) && (
+      {(demoUrl || githubUrl || appStoreUrl) && (
         <div className='flex flex-wrap gap-3 pt-4 mt-4 border-t border-[var(--border-primary)]/30'>
           {demoUrl && (
             <Text.Button
@@ -88,6 +89,16 @@ export function ProjectCard({
               target='_blank'
             >
               Demo
+            </Text.Button>
+          )}
+          {appStoreUrl && (
+            <Text.Button
+              variant='outline'
+              size='sm'
+              href={appStoreUrl}
+              target='_blank'
+            >
+              App Store
             </Text.Button>
           )}
           {githubUrl && (

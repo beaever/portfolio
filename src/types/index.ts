@@ -59,4 +59,5 @@ export interface PortfolioProject {
   technologies: string[];
   demoUrl?: string;
   githubUrl?: string;
+  appStoreUrl?: string;
 }
