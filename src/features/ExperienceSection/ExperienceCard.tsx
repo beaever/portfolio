@@ -27,7 +27,7 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
           </Text.Body>
           <div className='flex items-center gap-2'>
             <Calendar className='w-3 h-3 text-[var(--text-tertiary)]' />
-            <Text.Label className='text-[var(--accent-primary)] font-mono'>
+            <Text.Label className='text-[var(--accent-primary)] font-mono font-semibold'>
               {experience.period}
             </Text.Label>
           </div>
@@ -58,11 +58,11 @@ function ProjectCard({ project }: ProjectCardProps) {
   const hasMoreDetails = project.details.length > 3;
 
   return (
-    <div className='bg-[var(--bg-surface)]/50 rounded-2xl p-5 hover:bg-[var(--bg-surface)]/80 transition-colors'>
+    <div className='glass-inner rounded-2xl p-5 hover:bg-[var(--glass-inner-hover)] transition-colors'>
       <Text.Heading size='xs' as='h4' className='mb-1'>
         {project.title}
       </Text.Heading>
-      <Text.Label className='text-[var(--accent-secondary)] mb-3 block'>
+      <Text.Label className='text-[var(--accent-primary)] font-semibold mb-3 block'>
         {project.period}
       </Text.Label>
       <Text.Body size='sm' color='secondary' className='mb-3'>
@@ -80,9 +80,9 @@ function ProjectCard({ project }: ProjectCardProps) {
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className='text-xs text-[var(--text-tertiary)] flex items-start gap-2'
+                  className='text-sm leading-6 text-[var(--text-secondary)] flex items-start gap-2'
                 >
-                  <span className='w-1 h-1 rounded-full bg-[var(--accent-primary)] mt-1.5 flex-shrink-0' />
+                  <span className='w-1 h-1 rounded-full bg-[var(--accent-primary)] mt-2.5 flex-shrink-0' />
                   <span>{detail}</span>
                 </motion.li>
               ))}
@@ -91,7 +91,8 @@ function ProjectCard({ project }: ProjectCardProps) {
           {hasMoreDetails && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className='mt-3 flex items-center gap-1 text-xs text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] transition-colors font-medium'
+              aria-expanded={isExpanded}
+              className='mt-3 flex items-center gap-1 text-sm text-[var(--main)] hover:text-[var(--text-secondary)] transition-colors font-medium'
             >
               <span>
                 {isExpanded ? '접기' : `+${project.details.length - 3} more`}

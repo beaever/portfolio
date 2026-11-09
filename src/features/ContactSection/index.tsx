@@ -2,6 +2,8 @@
  * ContactSection Component
  */
 
+'use client';
+
 import { motion } from 'framer-motion';
 import { Section } from '@/components/ui/Section';
 import { GlassCard } from '@/components/common/GlassCard';
@@ -19,7 +21,7 @@ export function ContactSection() {
         variants={fadeInUp}
       >
         <GlassCard padding='lg' className='text-center'>
-          <div className='bg-gradient-to-br from-[var(--accent-primary)]/10 to-[var(--accent-secondary)]/10 rounded-2xl p-8 md:p-12'>
+          <div className='p-8 md:p-12'>
             <Text.Heading size='md' className='mb-4'>
               Let&apos;s Work Together
             </Text.Heading>

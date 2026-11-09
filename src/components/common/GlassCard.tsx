@@ -11,6 +11,9 @@
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
+const HOVER_LIFT =
+  'transition-[translate,scale,background-color,border-color,box-shadow,color] duration-300 hover:-translate-y-1 hover:border-[var(--main)]/60 hover:bg-[var(--glass-bg-hover)] motion-reduce:translate-none';
+
 interface GlassCardProps {
   children: ReactNode;
   className?: string;
@@ -28,9 +31,8 @@ export function GlassCard({
 }: GlassCardProps) {
   const variantClasses = {
     default: '',
-    hover: 'hover:ring-2 hover:ring-[var(--accent-primary)]/50 transition-all',
-    group:
-      'hover:ring-2 hover:ring-[var(--accent-primary)]/50 transition-all group',
+    hover: HOVER_LIFT,
+    group: `${HOVER_LIFT} group`,
   };
 
   const paddingClasses = {
@@ -50,7 +52,7 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        'bg-[var(--bg-surface)] backdrop-blur-md border border-[var(--border-primary)]',
+        'glass',
         roundedClasses[rounded],
         paddingClasses[padding],
         variantClasses[variant],

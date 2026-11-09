@@ -4,9 +4,11 @@
  * 포트폴리오 메인 히어로 섹션
  */
 
+'use client';
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { GradientText } from '@/components/common/GradientText';
+import { HighlightText } from '@/components/common/HighlightText';
 import { Text } from '@/components/ui/Text';
 import { CodeBlock } from './CodeBlock';
 import { useTotalExperience } from '@/hooks/useCareerCalculator';
@@ -32,20 +34,23 @@ export function HeroSection() {
   }, [DYNAMIC_CODE_TEXT]);
 
   return (
-    <section id='about' className='min-h-screen flex items-center pt-20'>
-      <div className='max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24'>
+    <section id='about' className='relative z-10 min-h-screen flex items-start pt-20'>
+      <div className='w-full max-w-7xl mx-auto px-6 md:px-12 pb-16 md:pb-20'>
+        {/* 입자 워드마크가 놓일 자리 */}
+        <div aria-hidden='true' className='h-[24vh] md:h-[32vh]' />
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center'>
           {/* Left: Text */}
           <motion.div
             initial='hidden'
             animate='visible'
             variants={staggerContainer}
+            className='glass rounded-3xl p-7 md:p-9'
           >
             <motion.div variants={fadeInUp}>
               <Text.Heading size='xl' as='h1' className='mb-6'>
                 Solving Complexity
                 <br />
-                with <GradientText>Clean Code</GradientText>.
+                with <HighlightText>Clean Code</HighlightText>.
               </Text.Heading>
             </motion.div>
             <motion.div variants={fadeInUp}>
@@ -59,13 +64,21 @@ export function HeroSection() {
                   <Text.Body
                     key={index}
                     size='md'
-                    color='tertiary'
+                    color='secondary'
                     className='leading-relaxed'
                   >
-                    • <GradientText>{highlight}</GradientText>
+                    • {highlight}
                   </Text.Body>
                 ))}
               </div>
+            </motion.div>
+            <motion.div variants={fadeInUp} className='flex flex-wrap gap-3 mt-8'>
+              <Text.Button variant='primary' href='/projects'>
+                프로젝트 보기
+              </Text.Button>
+              <Text.Button variant='outline' href='/contact'>
+                연락하기
+              </Text.Button>
             </motion.div>
           </motion.div>
 

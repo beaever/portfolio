@@ -51,6 +51,14 @@ export interface Achievement {
   accentColor?: 'primary' | 'secondary';
 }
 
+export interface MediaItem {
+  title: string;
+  category: string;
+  period: string;
+  thumbnail: string;
+  href: string;
+}
+
 export interface PortfolioProject {
   title: string;
   description: string;

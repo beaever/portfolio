@@ -9,6 +9,7 @@
  * <Text.Body size="lg" color="secondary">Description</Text.Body>
  */
 
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -56,7 +57,7 @@ const Heading = ({
   };
 
   return (
-    <Component className={cn(sizeClasses[size], className)}>
+    <Component className={cn('text-balance', sizeClasses[size], className)}>
       {children}
     </Component>
   );
@@ -113,16 +114,17 @@ const Button = ({
 
   const variantClasses = {
     primary:
-      'bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] text-white font-medium hover:shadow-lg hover:shadow-[var(--shadow-accent)] transition-all',
+      'bg-[var(--main)] text-[var(--on-main)] font-medium hover:shadow-lg hover:shadow-[var(--shadow-accent)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
     secondary:
-      'bg-[var(--bg-surface)] text-[var(--text-primary)] font-medium border border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] transition-all',
+      'glass text-[var(--text-primary)] font-medium hover:bg-[var(--glass-bg-hover)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
     outline:
-      'border border-[var(--border-primary)] text-[var(--text-primary)] font-medium hover:bg-[var(--bg-surface)] transition-all',
+      'glass text-[var(--text-primary)] font-medium hover:bg-[var(--glass-bg-hover)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
     ghost:
-      'text-[var(--text-secondary)] font-medium hover:text-[var(--accent-primary)] hover:bg-[var(--bg-surface)] transition-all',
+      'text-[var(--text-secondary)] font-medium hover:text-[var(--main)] hover:bg-[var(--bg-surface)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
   };
 
-  const baseClasses = 'rounded-lg inline-flex items-center justify-center';
+  const baseClasses =
+    'rounded-lg inline-flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] motion-reduce:translate-none motion-reduce:scale-none';
 
   const combinedClasses = cn(
     baseClasses,
@@ -130,6 +132,14 @@ const Button = ({
     variantClasses[variant],
     className,
   );
+
+  if (href?.startsWith('/')) {
+    return (
+      <Link href={href} className={combinedClasses}>
+        {children}
+      </Link>
+    );
+  }
 
   if (href) {
     return (

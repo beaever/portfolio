@@ -29,7 +29,7 @@ export function ProjectCard({
           {String(index + 1).padStart(2, '0')}
         </span>
         <ArrowUpRight
-          className='text-[var(--text-quaternary)] group-hover:text-[var(--accent-primary)] transition-colors'
+          className='text-[var(--text-quaternary)] group-hover:text-[var(--main)] transition-colors'
           size={20}
         />
       </div>
@@ -39,16 +39,16 @@ export function ProjectCard({
           <Text.Heading
             size='sm'
             as='h3'
-            className='group-hover:text-[var(--accent-primary)] transition-colors'
+            className='group-hover:text-[var(--main)] transition-colors'
           >
             {title}
           </Text.Heading>
-          <span className='text-xs text-[var(--text-tertiary)] font-mono'>
+          <span className='text-[13px] font-semibold text-[var(--accent-primary)] font-mono'>
             {period}
           </span>
         </div>
 
-        <Text.Body size='sm' color='secondary'>
+        <Text.Body size='md' color='secondary'>
           {description}
         </Text.Body>
 
@@ -56,11 +56,11 @@ export function ProjectCard({
           {highlights.map((highlight, highlightIndex) => (
             <li
               key={highlightIndex}
-              className='flex gap-2 text-sm leading-relaxed text-[var(--text-secondary)]'
+              className='flex gap-2 text-[15px] leading-7 text-[var(--text-secondary)]'
             >
               <span
                 aria-hidden='true'
-                className='mt-2 size-1 shrink-0 rounded-full bg-[var(--accent-primary)]'
+                className='mt-3 size-1 shrink-0 rounded-full bg-[var(--accent-primary)]'
               />
               <span>{highlight}</span>
             </li>
@@ -71,7 +71,7 @@ export function ProjectCard({
           {technologies.map((tech, techIndex) => (
             <span
               key={techIndex}
-              className='px-3 py-1 bg-[var(--bg-surface)]/80 rounded-full text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] transition-colors'
+              className='px-3 py-1 glass-inner rounded-full text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--glass-inner-hover)] transition-colors'
             >
               {tech}
             </span>

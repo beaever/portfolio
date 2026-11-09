@@ -11,7 +11,7 @@ export function NoiseTexture() {
   return (
     <div
       aria-hidden='true'
-      className='fixed inset-0 pointer-events-none z-[1] opacity-[0.15]'
+      className='fixed inset-0 pointer-events-none z-[1] opacity-[0.08]'
       style={{
         backgroundImage: noiseDataUri,
         backgroundRepeat: 'repeat',

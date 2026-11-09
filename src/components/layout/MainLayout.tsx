@@ -1,7 +1,20 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { NoiseTexture } from '@/components/background/NoiseTexture';
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
 import { useThemeStore } from '@/stores/useThemeStore';
+
+// WebGL 은 브라우저 전용이고, 첫 페인트(LCP)를 막지 않도록 분리한다.
+const ParticleField = dynamic(
+  () =>
+    import('@/components/background/ParticleField').then(
+      (module) => module.ParticleField,
+    ),
+  { ssr: false },
+);
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -38,8 +51,18 @@ export function MainLayout({ children }: MainLayoutProps) {
   }, [theme]);
 
   return (
-    <div className='min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]'>
-      <main>{children}</main>
+    <div className='relative flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]'>
+      <a
+        href='#main'
+        className='glass sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:px-4 focus:py-2'
+      >
+        본문으로 건너뛰기
+      </a>
+      <ParticleField />
+      <NoiseTexture />
+      <Header />
+      <main id='main' tabIndex={-1} className='relative z-10 flex-1'>{children}</main>
+      <Footer />
     </div>
   );
 }

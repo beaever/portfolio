@@ -1,39 +1,68 @@
 :root {
+  color-scheme: dark;
   /* Midnight Blueprint (Dark Theme) */
   --bg-primary: #0B0E14;
   --bg-secondary: rgba(255, 255, 255, 0.02);
   --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-card: rgba(16, 20, 29, 0.84); /* backdrop-filter 미지원 브라우저용 */
+  --glass-bg: rgba(14, 19, 31, 0.5);
+  --glass-bg-hover: rgba(14, 19, 31, 0.46);
+  --glass-inner: rgba(255, 255, 255, 0.06);
+  --glass-inner-hover: rgba(255, 255, 255, 0.12);
+  --glass-sheen: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-highlight: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.22);
+  --glass-edge: rgba(255, 255, 255, 0.2);
+  --glass-edge-dim: rgba(255, 255, 255, 0.03);
+  --on-main: #0B0E14;
   
   --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-tertiary: rgba(255, 255, 255, 0.6);
-  --text-quaternary: rgba(255, 255, 255, 0.4);
+  --text-secondary: rgba(255, 255, 255, 0.84);
+  --text-tertiary: rgba(255, 255, 255, 0.72);
+  --text-quaternary: rgba(255, 255, 255, 0.6);
   
-  --accent-primary: #38BDF8;
-  --accent-secondary: #818CF8;
+  /* 모노크롬 테마: 강조색은 라이트에서 블랙, 다크에서는 보이도록 화이트로 반전한다. */
+  --main: #FFFFFF;
+  --accent-primary: #FFFFFF;
+  --accent-secondary: #FFFFFF;
   
   --border-primary: rgba(255, 255, 255, 0.1);
   --border-secondary: rgba(255, 255, 255, 0.05);
   
-  --shadow-accent: rgba(56, 189, 248, 0.3);
+  --shadow-accent: rgba(255, 255, 255, 0.2);
 }
 
 .light {
+  color-scheme: light;
   /* Light Theme */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F8F9FA;
+  --bg-secondary: rgba(11, 14, 20, 0.02);
   --bg-surface: rgba(0, 0, 0, 0.03);
+  --bg-card: rgba(255, 255, 255, 0.86);
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-bg-hover: rgba(255, 255, 255, 0.78);
+  --glass-inner: rgba(255, 255, 255, 0.5);
+  --glass-inner-hover: rgba(255, 255, 255, 0.8);
+  --glass-sheen: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(11, 14, 20, 0.05);
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  --glass-shadow: rgba(15, 23, 42, 0.07);
+  --glass-edge: rgba(255, 255, 255, 0.7);
+  --glass-edge-dim: rgba(11, 14, 20, 0.03);
+  --on-main: #FFFFFF;
   
   --text-primary: #0B0E14;
-  --text-secondary: rgba(11, 14, 20, 0.7);
-  --text-tertiary: rgba(11, 14, 20, 0.6);
-  --text-quaternary: rgba(11, 14, 20, 0.4);
+  --text-secondary: rgba(11, 14, 20, 0.84);
+  --text-tertiary: rgba(11, 14, 20, 0.76);
+  --text-quaternary: rgba(11, 14, 20, 0.66);
   
-  --accent-primary: #0EA5E9;
-  --accent-secondary: #6366F1;
+  --main: #0B0E14;
+  --accent-primary: #000000;
+  --accent-secondary: #000000;
   
   --border-primary: rgba(0, 0, 0, 0.1);
   --border-secondary: rgba(0, 0, 0, 0.05);
   
-  --shadow-accent: rgba(14, 165, 233, 0.3);
+  --shadow-accent: rgba(11, 14, 20, 0.2);
 }

@@ -2,6 +2,8 @@
  * ProjectsSection Component
  */
 
+'use client';
+
 import { motion } from 'framer-motion';
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
@@ -14,7 +16,7 @@ export function ProjectsSection() {
   return (
     <Section id='projects' background='secondary'>
       <AnimatedWrapper variant='fadeInUp'>
-        <Text.Heading size='md' className='mb-12 md:mb-16'>
+        <Text.Heading size='md' className='glass inline-block rounded-2xl px-6 py-3 mb-10 md:mb-12'>
           Projects
         </Text.Heading>
       </AnimatedWrapper>

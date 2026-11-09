@@ -19,7 +19,7 @@ export function CodeBlock({ typedText }: CodeBlockProps) {
       transition={{ duration: 0.8, delay: 0.3 }}
     >
       <GlassCard padding="lg">
-        <pre className='font-mono text-sm md:text-base text-[var(--accent-primary)] whitespace-pre-wrap'>
+        <pre className='font-mono text-sm md:text-base text-[var(--text-primary)] whitespace-pre-wrap'>
           {typedText}
           <span className='animate-pulse'>|</span>
         </pre>

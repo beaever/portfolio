@@ -1,4 +1,10 @@
-import type { Skill, SocialLink, Experience, PortfolioProject } from '@/types';
+import type {
+  Skill,
+  SocialLink,
+  Experience,
+  PortfolioProject,
+  MediaItem,
+} from '@/types';
 
 export const PROFILE = {
   logo: 'THEBEAEVER',
@@ -179,10 +185,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
 ];
 
+// 순서가 페이지 이동 순서이자 particleEngine 의 WORDS 순서다.
 export const NAV_ITEMS = [
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '/' },
+  { label: 'Experience', href: '/experience' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Media', href: '/media' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const EXPERIENCES_DATE = [
@@ -190,6 +199,9 @@ export const EXPERIENCES_DATE = [
   { from: '2022.01', to: '2025.04' }, // NCITS
   // 만약 현재 진행 중인 경력이 있다면 EX:{ from: '2025.05', to: 'Present' } 추가
 ];
+
+// public/ 이미지를 쓸 때는 basePath 를 포함한다. 예: '/portfolio/media/cover.jpg'
+export const MEDIA_ITEMS: MediaItem[] = [];
 
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
