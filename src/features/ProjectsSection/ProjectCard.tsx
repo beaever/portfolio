@@ -1,9 +1,9 @@
 /**
  * ProjectCard Component
+ *
+ * 카드 대신 그리드 한 행으로 그린다. 왼쪽 4열은 메타 정보, 오른쪽 8열은 본문이다.
  */
 
-import { ArrowUpRight } from 'lucide-react';
-import { GlassCard } from '@/components/common/GlassCard';
 import { Text } from '@/components/ui/Text';
 import { PortfolioProject } from '@/types';
 
@@ -23,96 +23,61 @@ export function ProjectCard({
   index = 0,
 }: ProjectCardProps) {
   return (
-    <GlassCard variant='group' padding='lg' className='h-full flex flex-col'>
-      <div className='flex items-start justify-between mb-4'>
-        <span className='text-xs text-[var(--text-tertiary)] font-mono'>
+    <article className='grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-6 border-t border-[var(--border-primary)] py-12 md:py-16'>
+      <div className='md:col-span-4 space-y-3'>
+        <span className='block font-mono text-caption text-[var(--text-tertiary)]'>
           {String(index + 1).padStart(2, '0')}
         </span>
-        <ArrowUpRight
-          className='text-[var(--text-quaternary)] group-hover:text-[var(--main)] transition-colors'
-          size={20}
-        />
+        <Text.Heading size='sm' as='h3'>
+          {title}
+        </Text.Heading>
+        <span className='block font-mono text-small font-semibold text-[var(--accent-primary)]'>
+          {period}
+        </span>
+        {(demoUrl || githubUrl || appStoreUrl) && (
+          <div className='flex flex-wrap gap-x-5 pt-2'>
+            {demoUrl && (
+              <Text.Button size='sm' href={demoUrl} target='_blank'>
+                Demo
+              </Text.Button>
+            )}
+            {appStoreUrl && (
+              <Text.Button variant='secondary' size='sm' href={appStoreUrl} target='_blank'>
+                App Store
+              </Text.Button>
+            )}
+            {githubUrl && (
+              <Text.Button variant='secondary' size='sm' href={githubUrl} target='_blank'>
+                GitHub
+              </Text.Button>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className='flex-1 space-y-4'>
-        <div className='space-y-1'>
-          <Text.Heading
-            size='sm'
-            as='h3'
-            className='group-hover:text-[var(--main)] transition-colors'
-          >
-            {title}
-          </Text.Heading>
-          <span className='text-[13px] font-semibold text-[var(--accent-primary)] font-mono'>
-            {period}
-          </span>
-        </div>
-
-        <Text.Body size='md' color='secondary'>
+      <div className='md:col-span-8 space-y-6'>
+        <Text.Body size='lg' color='primary'>
           {description}
         </Text.Body>
 
-        <ul className='space-y-2'>
+        <ul className='space-y-3'>
           {highlights.map((highlight, highlightIndex) => (
             <li
               key={highlightIndex}
-              className='flex gap-2 text-[15px] leading-7 text-[var(--text-secondary)]'
+              className='grid grid-cols-[1.25rem_1fr] text-body text-[var(--text-secondary)]'
             >
-              <span
-                aria-hidden='true'
-                className='mt-3 size-1 shrink-0 rounded-full bg-[var(--accent-primary)]'
-              />
+              <span aria-hidden='true' className='text-[var(--text-tertiary)]'>
+                —
+              </span>
               <span>{highlight}</span>
             </li>
           ))}
         </ul>
 
-        <div className='flex flex-wrap gap-2'>
-          {technologies.map((tech, techIndex) => (
-            <span
-              key={techIndex}
-              className='px-3 py-1 glass-inner rounded-full text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--glass-inner-hover)] transition-colors'
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+        <p className='font-mono text-small text-[var(--text-tertiary)]'>
+          {technologies.join('  /  ')}
+        </p>
       </div>
-
-      {(demoUrl || githubUrl || appStoreUrl) && (
-        <div className='flex flex-wrap gap-3 pt-4 mt-4 border-t border-[var(--border-primary)]/30'>
-          {demoUrl && (
-            <Text.Button
-              variant='primary'
-              size='sm'
-              href={demoUrl}
-              target='_blank'
-            >
-              Demo
-            </Text.Button>
-          )}
-          {appStoreUrl && (
-            <Text.Button
-              variant='outline'
-              size='sm'
-              href={appStoreUrl}
-              target='_blank'
-            >
-              App Store
-            </Text.Button>
-          )}
-          {githubUrl && (
-            <Text.Button
-              variant='outline'
-              size='sm'
-              href={githubUrl}
-              target='_blank'
-            >
-              GitHub
-            </Text.Button>
-          )}
-        </div>
-      )}
-    </GlassCard>
+    </article>
   );
 }

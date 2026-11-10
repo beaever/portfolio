@@ -16,7 +16,7 @@ export function ExperienceSection() {
   return (
     <Section id='experience'>
       <AnimatedWrapper variant='fadeInUp'>
-        <Text.Heading size='md' className='glass inline-block rounded-2xl px-6 py-3 mb-10 md:mb-12'>
+        <Text.Heading size='md' className='mb-10 md:mb-16'>
           Experience
         </Text.Heading>
       </AnimatedWrapper>
@@ -32,7 +32,7 @@ export function ExperienceSection() {
           initial='hidden'
           animate='visible'
           variants={staggerContainer}
-          className='space-y-8'
+          className='border-b border-[var(--border-primary)]'
         >
           {EXPERIENCES.map((experience, index) => (
             <motion.div key={index} variants={fadeInUp}>

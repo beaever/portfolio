@@ -9,7 +9,6 @@ import { motion } from 'framer-motion';
 import { Section } from '@/components/ui/Section';
 import { Text } from '@/components/ui/Text';
 import { AnimatedWrapper } from '@/components/ui/AnimatedWrapper';
-import { GlassCard } from '@/components/common/GlassCard';
 import { MEDIA_ITEMS } from '@/constants/data';
 import { fadeInUp, staggerContainer } from '@/lib/animations';
 
@@ -17,29 +16,27 @@ export function MediaSection() {
   return (
     <Section id='media'>
       <AnimatedWrapper variant='fadeInUp'>
-        <Text.Heading size='md' className='glass inline-block rounded-2xl px-6 py-3 mb-10 md:mb-12'>
+        <Text.Heading size='md' className='mb-10 md:mb-16'>
           Media
         </Text.Heading>
       </AnimatedWrapper>
 
       {MEDIA_ITEMS.length === 0 ? (
-        <GlassCard padding='lg'>
-          <Text.Body size='md' color='secondary'>
-            미디어 작업물을 준비하고 있습니다.
-          </Text.Body>
-        </GlassCard>
+        <Text.Body size='lg' color='secondary' className='border-t border-[var(--border-primary)] pt-10'>
+          미디어 작업물을 준비하고 있습니다.
+        </Text.Body>
       ) : (
         <motion.div
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true }}
           variants={staggerContainer}
-          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12'
         >
           {MEDIA_ITEMS.map((item) => (
             <motion.div key={item.title} variants={fadeInUp}>
               <a href={item.href} target='_blank' rel='noreferrer' className='block group'>
-                <GlassCard variant='group' padding='none' className='overflow-hidden'>
+                <div>
                   <div className='relative aspect-video overflow-hidden'>
                     <Image
                       src={item.thumbnail}
@@ -49,15 +46,15 @@ export function MediaSection() {
                       className='object-cover transition-transform duration-500 group-hover:scale-105'
                     />
                   </div>
-                  <div className='p-5 space-y-1'>
-                    <span className='text-[13px] font-semibold text-[var(--accent-primary)] font-mono'>
+                  <div className='pt-4 space-y-1'>
+                    <span className='text-small font-semibold text-[var(--accent-primary)] font-mono'>
                       {item.category} · {item.period}
                     </span>
                     <Text.Heading size='xs' as='h3'>
                       {item.title}
                     </Text.Heading>
                   </div>
-                </GlassCard>
+                </div>
               </a>
             </motion.div>
           ))}

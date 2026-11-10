@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/data';
 
 const LINK_CLASS =
-  'glass group inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-base font-medium text-[var(--text-primary)] hover:text-[var(--main)] transition-colors';
+  'group inline-flex items-center gap-2 py-1 text-body font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors';
 
 export function PageNav() {
   const pathname = usePathname();

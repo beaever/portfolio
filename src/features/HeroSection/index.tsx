@@ -38,13 +38,13 @@ export function HeroSection() {
       <div className='w-full max-w-7xl mx-auto px-6 md:px-12 pb-16 md:pb-20'>
         {/* 입자 워드마크가 놓일 자리 */}
         <div aria-hidden='true' className='h-[24vh] md:h-[32vh]' />
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center'>
+        <div className='grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-12 items-end'>
           {/* Left: Text */}
           <motion.div
             initial='hidden'
             animate='visible'
             variants={staggerContainer}
-            className='glass rounded-3xl p-7 md:p-9'
+            className='lg:col-span-7'
           >
             <motion.div variants={fadeInUp}>
               <Text.Heading size='xl' as='h1' className='mb-6'>
@@ -59,31 +59,32 @@ export function HeroSection() {
               </Text.Body>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <div className='space-y-2'>
+              <ul className='space-y-2'>
                 {PROFILE.highlights.map((highlight, index) => (
-                  <Text.Body
+                  <li
                     key={index}
-                    size='md'
-                    color='secondary'
-                    className='leading-relaxed'
+                    className='grid grid-cols-[1.25rem_1fr] text-body text-[var(--text-secondary)]'
                   >
-                    • {highlight}
-                  </Text.Body>
+                    <span aria-hidden='true' className='text-[var(--text-tertiary)]'>—</span>
+                    <span>{highlight}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </motion.div>
-            <motion.div variants={fadeInUp} className='flex flex-wrap gap-3 mt-8'>
+            <motion.div variants={fadeInUp} className='flex flex-wrap gap-x-8 gap-y-2 mt-10'>
               <Text.Button variant='primary' href='/projects'>
                 프로젝트 보기
               </Text.Button>
-              <Text.Button variant='outline' href='/contact'>
+              <Text.Button variant='secondary' href='/contact'>
                 연락하기
               </Text.Button>
             </motion.div>
           </motion.div>
 
           {/* Right: Code Typing Animation */}
-          <CodeBlock typedText={typedText} />
+          <div className='lg:col-span-4 lg:col-start-9'>
+            <CodeBlock typedText={typedText} />
+          </div>
         </div>
       </div>
     </section>

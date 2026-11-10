@@ -32,9 +32,9 @@ export function Section({
   };
 
   const paddingClasses = {
-    sm: 'py-12 md:py-16',
-    md: 'py-16 md:py-24',
-    lg: 'py-20 md:py-32',
+    sm: 'pt-28 pb-12 md:pt-32 md:pb-16',
+    md: 'pt-32 pb-16 md:pt-36 md:pb-24',
+    lg: 'pt-36 pb-20 md:pt-44 md:pb-28',
   };
 
   return (

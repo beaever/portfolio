@@ -11,6 +11,7 @@
 
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TextHeadingProps {
@@ -49,11 +50,11 @@ const Heading = ({
   className,
 }: TextHeadingProps) => {
   const sizeClasses = {
-    xs: 'text-xl md:text-2xl font-bold',
-    sm: 'text-2xl md:text-3xl font-bold',
-    md: 'text-3xl md:text-4xl font-bold',
-    lg: 'text-4xl md:text-5xl font-bold',
-    xl: 'text-4xl md:text-5xl lg:text-6xl font-bold leading-tight',
+    xs: 'text-subheading font-semibold',
+    sm: 'text-heading font-semibold tracking-tight',
+    md: 'text-title font-semibold tracking-tight',
+    lg: 'text-title font-bold tracking-tight',
+    xl: 'text-display font-bold tracking-[-0.03em]',
   };
 
   return (
@@ -70,9 +71,9 @@ const Body = ({
   className,
 }: TextBodyProps) => {
   const sizeClasses = {
-    sm: 'text-sm',
-    md: 'text-base md:text-lg',
-    lg: 'text-lg md:text-xl',
+    sm: 'text-small',
+    md: 'text-body',
+    lg: 'text-lead',
   };
 
   const colorClasses = {
@@ -91,7 +92,7 @@ const Body = ({
 
 const Label = ({ children, className }: TextLabelProps) => {
   return (
-    <span className={cn('text-xs text-[var(--text-tertiary)]', className)}>
+    <span className={cn('text-caption text-[var(--text-tertiary)]', className)}>
       {children}
     </span>
   );
@@ -107,36 +108,33 @@ const Button = ({
   className,
 }: TextButtonProps) => {
   const sizeClasses = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-2.5 text-base',
-    lg: 'px-8 py-3 text-base',
+    sm: 'text-small',
+    md: 'text-body',
+    lg: 'text-lead',
   };
 
+  // 버튼 모양 없이 글자만 보이는 링크다. 강조는 밑줄 유무로만 구분한다.
   const variantClasses = {
-    primary:
-      'bg-[var(--main)] text-[var(--on-main)] font-medium hover:shadow-lg hover:shadow-[var(--shadow-accent)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
-    secondary:
-      'glass text-[var(--text-primary)] font-medium hover:bg-[var(--glass-bg-hover)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
-    outline:
-      'glass text-[var(--text-primary)] font-medium hover:bg-[var(--glass-bg-hover)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
-    ghost:
-      'text-[var(--text-secondary)] font-medium hover:text-[var(--main)] hover:bg-[var(--bg-surface)] transition-[translate,scale,background-color,border-color,box-shadow,color]',
+    primary: 'text-[var(--text-primary)] underline decoration-1 hover:decoration-2',
+    secondary: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:underline',
+    outline: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:underline',
+    ghost: 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]',
   };
-
-  const baseClasses =
-    'rounded-lg inline-flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] motion-reduce:translate-none motion-reduce:scale-none';
 
   const combinedClasses = cn(
-    baseClasses,
+    'group/link inline-flex items-center gap-1.5 py-1 font-medium underline-offset-[0.3em] transition-colors',
     sizeClasses[size],
     variantClasses[variant],
     className,
   );
+  const arrowClasses =
+    'size-[1em] shrink-0 transition-transform motion-reduce:transition-none';
 
   if (href?.startsWith('/')) {
     return (
       <Link href={href} className={combinedClasses}>
         {children}
+        <ArrowRight aria-hidden='true' className={cn(arrowClasses, 'group-hover/link:translate-x-0.5')} />
       </Link>
     );
   }
@@ -150,6 +148,10 @@ const Button = ({
         className={combinedClasses}
       >
         {children}
+        <ArrowUpRight
+          aria-hidden='true'
+          className={cn(arrowClasses, 'group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5')}
+        />
       </a>
     );
   }
