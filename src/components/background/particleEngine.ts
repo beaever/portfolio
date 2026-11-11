@@ -43,7 +43,7 @@ in vec2 aFlowA, aFlowB;
 uniform float uMorph, uTime, uFlow, uAspect, uIntro, uDim, uGain, uSize, uInk, uPointer, uDolly;
 uniform mat3 uCamera;
 uniform vec2 uPointerPos, uWind;
-uniform vec3 uBase, uAccent, uAccent2;
+uniform vec3 uBase;
 out vec3 vColor;
 out float vAlpha;
 
@@ -82,8 +82,7 @@ void main() {
   float lit = exp(-r2 / 0.13) * uPointer;
 
   float brightness = mix(aA.w, aB.w, e) * uDim * uGain * (1.0 - windOn * phase) * (1.0 + 1.4 * (1.0 - gather)) * clamp(depth * 1.1, 0.4, 1.5);
-  vec3 color = mix(uBase, mix(uAccent, uAccent2, h3), lit);
-  vColor = uInk > 0.5 ? color : color * brightness * (1.0 + lit * 1.6);
+  vColor = uInk > 0.5 ? uBase : uBase * brightness * (1.0 + lit * 1.6);
   vAlpha = clamp(brightness * (1.0 + lit), 0.0, 1.0);
   gl_PointSize = uSize * (0.7 + h2 * 0.6) * clamp(depth, 0.4, 3.0) * (1.0 + lit * 0.7);
   gl_Position = vec4(q.x / uAspect, q.y, 0.0, 1.0);
@@ -188,8 +187,9 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
   let paused = false;
   let ready = false;
   let colorsDirty = true;
-  let colors = { background: [0, 0, 0], base: [1, 1, 1], accent: [1, 1, 1], accent2: [1, 1, 1], ink: false };
+  let colors = { background: [0, 0, 0], base: [1, 1, 1], ink: false };
   let frameId = 0;
+  let destroyed = false;
   let idleTimer = 0;
   let resizeTimer = 0;
   let lastFrame = performance.now();
@@ -339,8 +339,6 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     colors = {
       background: read('--bg-primary'),
       base: read('--text-primary'),
-      accent: read('--accent-primary'),
-      accent2: read('--accent-secondary'),
       ink: document.documentElement.classList.contains('light'),
     };
     colorsDirty = false;
@@ -389,7 +387,7 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
   }
 
   function kick() {
-    if (ready && !frameId) frameId = requestAnimationFrame(frame);
+    if (ready && !destroyed && !frameId) frameId = requestAnimationFrame(frame);
   }
 
   function frame(now: number) {
@@ -431,7 +429,7 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     const to = buildForm(routeTo);
     const intro = animating() ? clamp((now - introStart) / INTRO_MS, 0, 1) : 1;
 
-    const { background, base, accent, accent2, ink } = colors;
+    const { background, base, ink } = colors;
     gl!.clearColor(background[0], background[1], background[2], 1);
     gl!.clear(gl!.COLOR_BUFFER_BIT);
     // 곱하기 합성은 겹칠수록 검게 뭉개지므로 라이트 모드는 알파 합성을 쓴다.
@@ -454,8 +452,6 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     gl!.uniform2f(uniform('uPointerPos'), pointer.x, pointer.y);
     gl!.uniform2f(uniform('uWind'), from.wind, to.wind);
     gl!.uniform3fv(uniform('uBase'), base);
-    gl!.uniform3fv(uniform('uAccent'), accent);
-    gl!.uniform3fv(uniform('uAccent2'), accent2);
 
     // 입자 수를 줄여도 전체 밝기는 유지한다. 스크롤 중에는 잠깐 더 밝힌다.
     const gain = (ink ? 0.44 : 0.4) * Math.sqrt(particleCount / drawCount) * (1 + Math.min(scrollSpeed / 6000, 0.15));
@@ -498,7 +494,13 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     }, 160);
   };
 
-  let destroyed = false;
+  // GPU 가 리셋되면 버퍼가 모두 사라진다. 빈 루프를 돌리지 않고 기본 배경으로 물러난다.
+  // shortcut: 복구(webglcontextrestored)는 하지 않는다. 새로고침하면 다시 그린다.
+  const handleContextLost = () => {
+    engine.destroy();
+    canvas.hidden = true;
+  };
+  canvas.addEventListener('webglcontextlost', handleContextLost);
 
   async function start() {
     await Promise.race([
@@ -519,7 +521,7 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
   }
   void start();
 
-  return {
+  const engine = {
     refreshTheme() {
       colorsDirty = true;
       kick();
@@ -553,7 +555,10 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
       window.removeEventListener('pointermove', handlePointerMove);
       document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
       forms.forEach((form) => form && gl.deleteBuffer(form.buffer));
+      forms = [];
     },
   };
+  return engine;
 }

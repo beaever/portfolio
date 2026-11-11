@@ -1,10 +1,4 @@
-import type {
-  Skill,
-  SocialLink,
-  Experience,
-  PortfolioProject,
-  MediaItem,
-} from '@/types';
+import type { Experience, PortfolioProject, MediaItem } from '@/types';
 
 export const PROFILE = {
   logo: 'THEBEAEVER',
@@ -19,51 +13,7 @@ export const PROFILE = {
   ],
   email: 'thebeaever@gmail.com',
   github: 'https://github.com/beaever',
-  location: 'Seoul, South Korea',
 };
-
-export const SKILLS: Skill[] = [
-  {
-    name: 'JavaScript',
-    icon: 'javascript',
-    category: 'frontend',
-    proficiency: 90,
-  },
-  {
-    name: 'TypeScript',
-    icon: 'typescript',
-    category: 'frontend',
-    proficiency: 90,
-  },
-  { name: 'React', icon: 'react', category: 'frontend', proficiency: 95 },
-  { name: 'Next.js', icon: 'nextjs', category: 'frontend', proficiency: 85 },
-  {
-    name: 'React Query',
-    icon: 'reactquery',
-    category: 'frontend',
-    proficiency: 80,
-  },
-  { name: 'Recoil', icon: 'recoil', category: 'frontend', proficiency: 75 },
-  { name: 'SWR', icon: 'swr', category: 'frontend', proficiency: 80 },
-  { name: 'Emotion', icon: 'emotion', category: 'frontend', proficiency: 85 },
-  {
-    name: 'Styled-components',
-    icon: 'styledcomponents',
-    category: 'frontend',
-    proficiency: 85,
-  },
-  { name: 'Turborepo', icon: 'turborepo', category: 'tools', proficiency: 80 },
-  { name: 'pnpm', icon: 'pnpm', category: 'tools', proficiency: 85 },
-  { name: 'Storybook', icon: 'storybook', category: 'tools', proficiency: 75 },
-];
-
-export const SOFT_SKILLS: string[] = [
-  '구조적 사고',
-  '문제 해결 능력',
-  '팀 커뮤니케이션',
-  '코드 리뷰 문화',
-  '자기 주도 학습',
-];
 
 export const EXPERIENCES: Experience[] = [
   {
@@ -167,24 +117,6 @@ export const EXPERIENCES: Experience[] = [
   },
 ];
 
-export const SOCIAL_LINKS: SocialLink[] = [
-  {
-    name: 'GitHub',
-    url: 'https://github.com/beaever',
-    icon: 'github',
-  },
-  {
-    name: 'LinkedIn',
-    url: 'https://linkedin.com',
-    icon: 'linkedin',
-  },
-  {
-    name: 'Email',
-    url: 'mailto:thebeaever@gmail.com',
-    icon: 'mail',
-  },
-];
-
 // 순서가 페이지 이동 순서이자 particleEngine 의 WORDS 순서다.
 export const NAV_ITEMS = [
   { label: 'About', href: '/' },
@@ -194,11 +126,11 @@ export const NAV_ITEMS = [
   { label: 'Contact', href: '/contact' },
 ];
 
-export const EXPERIENCES_DATE = [
-  { from: '2021.07', to: '2021.12' }, // HubDnc
-  { from: '2022.01', to: '2025.04' }, // NCITS
-  // 만약 현재 진행 중인 경력이 있다면 EX:{ from: '2025.05', to: 'Present' } 추가
-];
+// 경력 기간은 EXPERIENCES 의 period 하나만 고치면 된다. 진행 중이면 '2025.05 ~ Present' 로 적는다.
+export const EXPERIENCES_DATE = EXPERIENCES.map(({ period }) => {
+  const [from, to] = period.split(' ~ ');
+  return { from, to };
+});
 
 // public/ 이미지를 쓸 때는 basePath 를 포함한다. 예: '/portfolio/media/cover.jpg'
 export const MEDIA_ITEMS: MediaItem[] = [];

@@ -9,7 +9,6 @@ export const DEFAULT_THEME: Theme = 'dark';
 interface ThemeState {
   theme: Theme;
   toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
 }
 
 // DOM 반영은 MainLayout 이 전담한다. 스토어에서 클래스를 직접 건드리면
@@ -20,7 +19,6 @@ export const useThemeStore = create<ThemeState>()(
       theme: DEFAULT_THEME,
       toggleTheme: () =>
         set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
-      setTheme: (theme) => set({ theme }),
     }),
     {
       name: THEME_STORAGE_KEY,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, Pause, Play, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -14,19 +14,32 @@ export function Header() {
   const { theme, toggleTheme } = useThemeStore();
   const { paused, togglePaused } = useMotionStore();
   const pathname = usePathname();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isMobileMenuOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsMobileMenuOpen(false);
     };
+    // 서랍이 열린 동안 뒤 페이지는 포커스와 스크린리더에서 뺀다.
+    const background = [navRef.current, document.getElementById('main'), document.querySelector('footer')];
+    background.forEach((element) => element?.setAttribute('inert', ''));
+    const menuButton = menuButtonRef.current;
+    closeButtonRef.current?.focus();
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      background.forEach((element) => element?.removeAttribute('inert'));
+      window.removeEventListener('keydown', handleKeyDown);
+      menuButton?.focus();
+    };
   }, [isMobileMenuOpen]);
 
   return (
     <>
       <motion.nav
+        ref={navRef}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         // 푸터와 같은 방식으로 아랫부분을 페이드시켜 블러 경계가 보이지 않게 한다.
@@ -102,9 +115,10 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
+            ref={menuButtonRef}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className='md:hidden w-10 h-10 flex items-center justify-center rounded-full text-[var(--text-primary)] hover:bg-[var(--border-primary)] transition-colors'
-            aria-label='Toggle menu'
+            aria-label={isMobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
             aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -128,6 +142,9 @@ export function Header() {
         {isMobileMenuOpen && (
           <motion.div
             key='drawer'
+            role='dialog'
+            aria-modal='true'
+            aria-label='메뉴'
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -136,9 +153,10 @@ export function Header() {
           >
             <div className='flex flex-col h-full p-6'>
               <button
+                ref={closeButtonRef}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className='self-end w-10 h-10 flex items-center justify-center text-[var(--text-primary)] mb-8'
-                aria-label='Close menu'
+                aria-label='메뉴 닫기'
               >
                 <X size={24} />
               </button>

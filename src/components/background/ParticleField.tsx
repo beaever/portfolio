@@ -20,7 +20,13 @@ export function ParticleField() {
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    const engine = createParticleEngine(canvasRef.current);
+    let engine: ReturnType<typeof createParticleEngine> = null;
+    try {
+      engine = createParticleEngine(canvasRef.current);
+    } catch (error) {
+      // 장식용 배경이 실패해도 본문은 보여야 한다.
+      console.warn('입자 배경을 끕니다:', error);
+    }
     engineRef.current = engine;
     return () => {
       engine?.destroy();

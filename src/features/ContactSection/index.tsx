@@ -21,7 +21,7 @@ export function ContactSection() {
         className='grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-10'
       >
         <div className='md:col-span-8'>
-          <Text.Heading size='xl' className='mb-6'>
+          <Text.Heading size='xl' as='h1' className='mb-6'>
             Let&apos;s Work Together
           </Text.Heading>
           <Text.Body size='lg' color='secondary'>

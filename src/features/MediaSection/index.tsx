@@ -15,8 +15,8 @@ import { fadeInUp, staggerContainer } from '@/lib/animations';
 export function MediaSection() {
   return (
     <Section id='media'>
-      <AnimatedWrapper variant='fadeInUp'>
-        <Text.Heading size='md' className='mb-10 md:mb-16'>
+      <AnimatedWrapper>
+        <Text.Heading size='md' as='h1' className='mb-10 md:mb-16'>
           Media
         </Text.Heading>
       </AnimatedWrapper>

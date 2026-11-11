@@ -1,76 +1,34 @@
 import { useMemo } from 'react';
 
-interface ExperiencePeriod {
-  years: number;
-  months: number;
-  totalMonths: number;
-  formattedText: string;
-}
-
 interface Experience {
   from: string;
   to?: string;
 }
 
-const parseDateString = (dateStr: string): Date => {
-  return new Date(dateStr.replace(/\./g, '-'));
+// '2021.07' 을 로컬 시간 기준 그 달로 읽는다. new Date('2021-07') 은 UTC 라 서쪽 시간대에서 전달이 된다.
+const parseMonth = (dateStr: string) => {
+  const [year, month] = dateStr.split('.').map(Number);
+  return { year, month: month - 1 };
 };
 
-export const useExperienceCalculator = (
-  from: string,
-  to?: string,
-): ExperiencePeriod => {
-  return useMemo(() => {
-    const startDate = parseDateString(from);
-    const endDate =
-      !to || to.toLowerCase() === 'present' ? new Date() : parseDateString(to);
+// 시작 달과 끝 달을 모두 포함해 센다. 2021.07 ~ 2021.12 는 6개월이다.
+export const totalExperienceText = (experiences: Experience[], now = new Date()): string => {
+  let totalMonths = 0;
 
-    let years = endDate.getFullYear() - startDate.getFullYear();
-    let months = endDate.getMonth() - startDate.getMonth();
+  experiences.forEach((exp) => {
+    const start = parseMonth(exp.from);
+    const end =
+      !exp.to || exp.to.toLowerCase() === 'present'
+        ? { year: now.getFullYear(), month: now.getMonth() }
+        : parseMonth(exp.to);
+    totalMonths += (end.year - start.year) * 12 + (end.month - start.month) + 1;
+  });
 
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
+  const y = Math.floor(totalMonths / 12);
+  const m = totalMonths % 12;
 
-    const totalMonths = years * 12 + months;
-
-    let formattedText = '';
-    if (years > 0) {
-      formattedText = `${years}년 ${months > 0 ? `${months}개월` : ''}`;
-    } else {
-      formattedText = `${months}개월`;
-    }
-
-    return {
-      years,
-      months,
-      totalMonths,
-      formattedText: formattedText.trim(),
-    };
-  }, [from, to]);
+  return m > 0 ? `${y}.${Math.round((m / 12) * 10)}y` : `${y}y`;
 };
 
-export const useTotalExperience = (experiences: Experience[]): string => {
-  return useMemo(() => {
-    let totalMonths = 0;
-
-    experiences.forEach((exp) => {
-      const startDate = parseDateString(exp.from);
-      const endDate =
-        !exp.to || exp.to.toLowerCase() === 'present'
-          ? new Date()
-          : parseDateString(exp.to);
-
-      const diff =
-        (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-        (endDate.getMonth() - startDate.getMonth());
-      totalMonths += diff;
-    });
-
-    const y = Math.floor(totalMonths / 12);
-    const m = totalMonths % 12;
-
-    return m > 0 ? `${y}.${Math.round((m / 12) * 10)}y` : `${y}y`;
-  }, [experiences]);
-};
+export const useTotalExperience = (experiences: Experience[]): string =>
+  useMemo(() => totalExperienceText(experiences), [experiences]);

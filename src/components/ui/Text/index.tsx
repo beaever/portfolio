@@ -23,18 +23,13 @@ interface TextHeadingProps {
 
 interface TextBodyProps {
   size?: 'sm' | 'md' | 'lg';
-  color?: 'primary' | 'secondary' | 'tertiary' | 'quaternary';
-  children: ReactNode;
-  className?: string;
-}
-
-interface TextLabelProps {
+  color?: 'primary' | 'secondary' | 'tertiary';
   children: ReactNode;
   className?: string;
 }
 
 interface TextButtonProps {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md' | 'lg';
   href?: string;
   target?: '_blank' | '_self';
@@ -80,21 +75,12 @@ const Body = ({
     primary: 'text-[var(--text-primary)]',
     secondary: 'text-[var(--text-secondary)]',
     tertiary: 'text-[var(--text-tertiary)]',
-    quaternary: 'text-[var(--text-quaternary)]',
   };
 
   return (
     <p className={cn(sizeClasses[size], colorClasses[color], className)}>
       {children}
     </p>
-  );
-};
-
-const Label = ({ children, className }: TextLabelProps) => {
-  return (
-    <span className={cn('text-caption text-[var(--text-tertiary)]', className)}>
-      {children}
-    </span>
   );
 };
 
@@ -117,8 +103,6 @@ const Button = ({
   const variantClasses = {
     primary: 'text-[var(--text-primary)] underline decoration-1 hover:decoration-2',
     secondary: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:underline',
-    outline: 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:underline',
-    ghost: 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]',
   };
 
   const combinedClasses = cn(
@@ -166,6 +150,5 @@ const Button = ({
 export const Text = {
   Heading,
   Body,
-  Label,
   Button,
 };

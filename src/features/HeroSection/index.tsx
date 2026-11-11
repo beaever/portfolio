@@ -7,7 +7,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { HighlightText } from '@/components/common/HighlightText';
 import { Text } from '@/components/ui/Text';
 import { CodeBlock } from './CodeBlock';
@@ -17,10 +17,12 @@ import { staggerContainer, fadeInUp } from '@/lib/animations';
 
 export function HeroSection() {
   const [typedText, setTypedText] = useState('');
+  const reducedMotion = useReducedMotion();
   const totalExperienceText = useTotalExperience(EXPERIENCES_DATE);
   const DYNAMIC_CODE_TEXT = `const developer = {\n  experience: '${totalExperienceText}',\n  focus: ['Performance', 'Scalability']\n}`;
 
   useEffect(() => {
+    if (reducedMotion) return;
     let index = 0;
     const timer = setInterval(() => {
       if (index <= DYNAMIC_CODE_TEXT.length) {
@@ -31,7 +33,7 @@ export function HeroSection() {
       }
     }, 50);
     return () => clearInterval(timer);
-  }, [DYNAMIC_CODE_TEXT]);
+  }, [DYNAMIC_CODE_TEXT, reducedMotion]);
 
   return (
     <section id='about' className='relative z-10 min-h-screen flex items-start pt-20'>
@@ -83,7 +85,7 @@ export function HeroSection() {
 
           {/* Right: Code Typing Animation */}
           <div className='lg:col-span-4 lg:col-start-9'>
-            <CodeBlock typedText={typedText} />
+            <CodeBlock typedText={reducedMotion ? DYNAMIC_CODE_TEXT : typedText} />
           </div>
         </div>
       </div>
