@@ -26,7 +26,7 @@ const OG_IMAGE = {
   url: '/og-image.png',
   width: 1200,
   height: 630,
-  alt: 'THEBEAEVER — Jinyoung Kim, Frontend Developer',
+  alt: 'THEBEAEVER — Jinyoung Kim, Frontend Developer · VJ',
 };
 
 export const metadata: Metadata = {
@@ -42,6 +42,11 @@ export const metadata: Metadata = {
     'THEBEAEVER',
     '프론트엔드 개발자',
     'Frontend Developer',
+    'VJ',
+    '비주얼 디렉팅',
+    '크리에이티브 개발자',
+    'WebGL',
+    '외주 개발',
     '포트폴리오',
     'React',
     'Next.js',

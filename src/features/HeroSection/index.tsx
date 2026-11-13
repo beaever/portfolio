@@ -14,12 +14,14 @@ import { CodeBlock } from './CodeBlock';
 import { useTotalExperience } from '@/hooks/useCareerCalculator';
 import { EXPERIENCES_DATE, PROFILE } from '@/constants/data';
 import { staggerContainer, fadeInUp } from '@/lib/animations';
+import { useMotionStore } from '@/stores/useMotionStore';
 
 export function HeroSection() {
   const [typedText, setTypedText] = useState('');
   const reducedMotion = useReducedMotion();
+  const setLive = useMotionStore((state) => state.setLive);
   const totalExperienceText = useTotalExperience(EXPERIENCES_DATE);
-  const DYNAMIC_CODE_TEXT = `const developer = {\n  experience: '${totalExperienceText}',\n  focus: ['Performance', 'Scalability']\n}`;
+  const DYNAMIC_CODE_TEXT = `const developer = {\n  experience: '${totalExperienceText}',\n  focus: ['Frontend', 'Realtime Visual', 'VJ']\n}`;
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -50,9 +52,9 @@ export function HeroSection() {
           >
             <motion.div variants={fadeInUp}>
               <Text.Heading size='xl' as='h1' className='mb-6'>
-                Solving Complexity
+                Code that ships.
                 <br />
-                with <HighlightText>Clean Code</HighlightText>.
+                Visuals that <HighlightText>move</HighlightText>.
               </Text.Heading>
             </motion.div>
             <motion.div variants={fadeInUp}>
@@ -74,11 +76,17 @@ export function HeroSection() {
               </ul>
             </motion.div>
             <motion.div variants={fadeInUp} className='flex flex-wrap gap-x-8 gap-y-2 mt-10'>
-              <Text.Button variant='primary' href='/projects'>
+              <Text.Button variant='primary' href='/contact'>
+                외주 · 채용 문의
+              </Text.Button>
+              <Text.Button variant='secondary' href='/projects'>
                 프로젝트 보기
               </Text.Button>
-              <Text.Button variant='secondary' href='/contact'>
-                연락하기
+            </motion.div>
+            <motion.div variants={fadeInUp} className='mt-10 flex flex-wrap items-baseline gap-x-3 text-small text-[var(--text-tertiary)]'>
+              <span>이 배경은 직접 만든 WebGL 입자 엔진입니다. 빈 곳을 클릭하거나</span>
+              <Text.Button variant='secondary' size='sm' onClick={() => setLive(true)}>
+                라이브 모드로 연주하기
               </Text.Button>
             </motion.div>
           </motion.div>

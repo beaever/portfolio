@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { MediaSection } from '@/features/MediaSection';
 
 export const metadata: Metadata = {
-  title: 'Media',
+  title: 'Visual',
   alternates: { canonical: '/media' },
 };
 

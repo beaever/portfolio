@@ -4,12 +4,12 @@ export const PROFILE = {
   logo: 'THEBEAEVER',
   name: '김진영',
   nameEn: 'Jinyoung Kim',
-  title: 'Frontend Developer',
+  title: 'Frontend Developer · VJ',
   description:
-    '대외비 환경의 복잡한 도메인에서도 문제를 구조화해 해결하는 프론트엔드 개발자입니다. 사내 ITSM, 운영·관리자 시스템을 중심으로 확장성·안정성·협업을 고려한 프론트엔드 설계와 구현 경험을 쌓아왔습니다.',
+    '사내 ITSM과 운영 시스템을 설계해 온 프론트엔드 개발자이자, 코드로 실시간 비주얼을 만드는 VJ·비주얼 디렉터입니다. 서비스를 만드는 같은 손으로 무대 위 영상도 움직입니다.',
   highlights: [
-    '실무에서 바로 쓰이는 구조와 코드 품질을 중요하게 생각합니다.',
-    '화면 구현을 넘어, 상태 설계 · API 계약 · 사용자 흐름까지 함께 고민합니다.',
+    '화면 구현을 넘어 상태 설계 · API 계약 · 사용자 흐름까지 함께 설계합니다.',
+    '공연·행사 VJ, 영상 연출, 인터랙티브 웹까지 비주얼을 기획부터 코드까지 끝냅니다.',
   ],
   email: 'thebeaever@gmail.com',
   github: 'https://github.com/beaever',
@@ -117,13 +117,13 @@ export const EXPERIENCES: Experience[] = [
   },
 ];
 
-// 순서가 페이지 이동 순서이자 particleEngine 의 WORDS 순서다.
+// 순서가 페이지 이동 순서이자 라이브 모드 숫자키 순서다. word 는 배경 입자가 그리는 글자다.
 export const NAV_ITEMS = [
-  { label: 'About', href: '/' },
-  { label: 'Experience', href: '/experience' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Media', href: '/media' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'About', href: '/', word: 'THEBEAEVER' },
+  { label: 'Experience', href: '/experience', word: 'EXPERIENCE' },
+  { label: 'Projects', href: '/projects', word: 'PROJECTS' },
+  { label: 'Visual', href: '/media', word: 'VISUAL' },
+  { label: 'Contact', href: '/contact', word: 'CONTACT' },
 ];
 
 // 경력 기간은 EXPERIENCES 의 period 하나만 고치면 된다. 진행 중이면 '2025.05 ~ Present' 로 적는다.
@@ -131,6 +131,22 @@ export const EXPERIENCES_DATE = EXPERIENCES.map(({ period }) => {
   const [from, to] = period.split(' ~ ');
   return { from, to };
 });
+
+// Visual 페이지와 외주 문의에서 보여 주는 작업 범위
+export const VISUAL_SERVICES = [
+  {
+    title: 'VJ · 실시간 비주얼',
+    description: '공연과 행사 현장에서 음악과 무대에 맞춰 영상을 실시간으로 운용합니다.',
+  },
+  {
+    title: '비주얼 디렉팅',
+    description: '영상과 모션의 톤, 흐름, 화면 구성을 기획하고 결과물까지 함께 맞춥니다.',
+  },
+  {
+    title: '인터랙티브 웹',
+    description: 'WebGL과 셰이더로 움직이는 웹사이트, 랜딩, 브랜드 경험을 설계하고 개발합니다.',
+  },
+];
 
 // public/ 이미지를 쓸 때는 basePath 를 포함한다. 예: '/portfolio/media/cover.jpg'
 export const MEDIA_ITEMS: MediaItem[] = [];
