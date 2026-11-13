@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { NoiseTexture } from '@/components/background/NoiseTexture';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { LiveMode } from '@/components/layout/LiveMode';
 import { useThemeStore } from '@/stores/useThemeStore';
 
 // WebGL 은 브라우저 전용이고, 첫 페인트(LCP)를 막지 않도록 분리한다.
@@ -63,6 +64,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Header />
       <main id='main' tabIndex={-1} className='relative z-10 flex-1'>{children}</main>
       <Footer />
+      <LiveMode />
     </div>
   );
 }

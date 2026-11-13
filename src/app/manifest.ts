@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'THEBEAEVER Portfolio',
     short_name: 'THEBEAEVER',
-    description: '사용자 경험을 중시하는 프론트엔드 개발자 포트폴리오입니다.',
+    description: '프론트엔드 개발자 · VJ 김진영의 포트폴리오입니다.',
     start_url: '/portfolio/',
     display: 'standalone',
     background_color: '#0B0E14',

@@ -3,7 +3,9 @@
  * 움직임은 셰이더에서 계산해 메인 스레드는 uniform 갱신만 한다.
  */
 
-const WORDS = ['THEBEAEVER', 'EXPERIENCE', 'PROJECTS', 'MEDIA', 'CONTACT'];
+import { NAV_ITEMS } from '@/constants/data';
+
+const WORDS = NAV_ITEMS.map((item) => item.word);
 // NAV_ITEMS 순서와 같다. 본문을 읽는 페이지일수록 어둡게 둔다.
 const SECTION_DIM = [1, 0.6, 0.55, 0.7, 0.8];
 const FLOATS_PER_PARTICLE = 6; // x, y, z, 밝기, 흐름 속도, 반복 폭
@@ -11,6 +13,8 @@ const STRIDE = FLOATS_PER_PARTICLE * Float32Array.BYTES_PER_ELEMENT;
 const INTRO_MS = 2400;
 const ROUTE_MS = 1300;
 const MIN_DRAW = 1 << 13;
+const PULSE_S = 2; // 충격파가 사라지는 시간
+const PULSE_COUNT = 6; // 동시에 퍼질 수 있는 충격파 수. 넘치면 가장 오래된 것부터 덮어쓴다.
 // 섹션별 카메라 자세: yaw, pitch, roll, dolly(+는 뒤로 물러남)
 const CAMERA_POSES = [
   [0.08, -0.05, -0.012, 0],
@@ -40,9 +44,10 @@ const VERTEX_SHADER = `#version 300 es
 precision highp float; precision highp int;
 in vec4 aA, aB;
 in vec2 aFlowA, aFlowB;
-uniform float uMorph, uTime, uFlow, uAspect, uIntro, uDim, uGain, uSize, uInk, uPointer, uDolly;
+uniform float uMorph, uTime, uFlow, uAspect, uIntro, uDim, uGain, uSize, uInk, uPointer, uDolly, uDissolve;
 uniform mat3 uCamera;
 uniform vec2 uPointerPos, uWind;
+uniform vec3 uPulse[${PULSE_COUNT}]; // xy: 화면 위치, z: 경과 초
 uniform vec3 uBase;
 out vec3 vColor;
 out float vAlpha;
@@ -72,14 +77,27 @@ void main() {
   float gather = ease(clamp((uIntro - 0.22) * 1.9 - h1 * 0.45, 0.0, 1.0));
   vec3 burst = vec3(normalize(scatter.xy + 1e-4) * (0.2 + 2.3 * h3) * vec2(uAspect, 1.0), 0.0) * smoothstep(0.0, 0.26, uIntro);
   p = mix(burst, p, gather);
+  // 스크롤해 본문으로 내려가면 글자가 공간으로 흩어진다.
+  p += scatter * uDissolve * vec3(0.7, 0.45, 0.4) * (0.3 + h3);
 
   p = uCamera * p;
   float depth = 2.0 / max(0.35, 2.0 + p.z + uDolly);
   vec2 q = p.xy * depth;
   vec2 fromPointer = q - uPointerPos;
   float r2 = dot(fromPointer, fromPointer);
-  q += (r2 > 1e-5 ? fromPointer / sqrt(r2) : vec2(0.0)) * exp(-r2 / 0.08) * 0.22 * uPointer;
-  float lit = exp(-r2 / 0.13) * uPointer;
+  // 커서 주변 원: 반경은 r2 의 분모, 밀어내는 거리는 뒤의 계수로 조절한다.
+  q += (r2 > 1e-5 ? fromPointer / sqrt(r2) : vec2(0.0)) * exp(-r2 / 0.02) * 0.12 * uPointer;
+  float lit = exp(-r2 / 0.035) * uPointer;
+
+  // 클릭 지점마다 퍼지는 고리 모양 충격파. 각자 끝까지 퍼지며 서로 겹친다.
+  vec2 origin = q;
+  for (int i = 0; i < ${PULSE_COUNT}; i++) {
+    vec2 fromPulse = origin - uPulse[i].xy;
+    float pr = length(fromPulse);
+    float ring = exp(-pow((pr - uPulse[i].z * 1.6) / 0.14, 2.0)) * exp(-uPulse[i].z * 1.8);
+    q += fromPulse / max(pr, 1e-3) * ring * (0.12 + 0.3 * h3);
+    lit += ring * 1.5;
+  }
 
   float brightness = mix(aA.w, aB.w, e) * uDim * uGain * (1.0 - windOn * phase) * (1.0 + 1.4 * (1.0 - gather)) * clamp(depth * 1.1, 0.4, 1.5);
   vColor = uInk > 0.5 ? uBase : uBase * brightness * (1.0 + lit * 1.6);
@@ -185,6 +203,10 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
   let routeTo = 0;
   let routeStart = -Infinity;
   let paused = false;
+  let stage = false;
+  const pulses = Array.from({ length: PULSE_COUNT }, () => ({ x: 0, y: 0, start: -Infinity }));
+  const pulseData = new Float32Array(PULSE_COUNT * 3);
+  let nextPulse = 0;
   let ready = false;
   let colorsDirty = true;
   let colors = { background: [0, 0, 0], base: [1, 1, 1], ink: false };
@@ -444,9 +466,18 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     gl!.uniform1f(uniform('uFlow'), flow);
     gl!.uniform1f(uniform('uAspect'), aspect);
     gl!.uniform1f(uniform('uIntro'), intro);
-    // 내려서 본문을 읽기 시작하면 배경을 낮춘다.
+    // 내려서 본문을 읽기 시작하면 배경을 낮추고 흩뜨린다. 라이브 모드에서는 배경이 주인공이다.
     const scrollDim = 1 - 0.3 * smoothstep(0, height * 0.6, scroll);
-    gl!.uniform1f(uniform('uDim'), (from.dim + (to.dim - from.dim) * transition) * scrollDim);
+    const dim = stage ? 1 : (from.dim + (to.dim - from.dim) * transition) * scrollDim;
+    gl!.uniform1f(uniform('uDim'), dim);
+    gl!.uniform1f(uniform('uDissolve'), stage || !animating() ? 0 : smoothstep(0, height * 1.5, scroll));
+    let pulseAge = Infinity; // 가장 최근 충격파의 경과 시간
+    pulses.forEach(({ x, y, start }, i) => {
+      const age = (now - start) / 1000;
+      pulseAge = Math.min(pulseAge, age);
+      pulseData.set([x, y, Math.min(age, 99)], i * 3);
+    });
+    gl!.uniform3fv(uniform('uPulse'), pulseData);
     gl!.uniform1f(uniform('uInk'), ink ? 1 : 0);
     gl!.uniform1f(uniform('uPointer'), pointer.amount);
     gl!.uniform2f(uniform('uPointerPos'), pointer.x, pointer.y);
@@ -468,15 +499,32 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     gl!.drawArrays(gl!.POINTS, 0, drawCount >> 3);
 
     if (transition >= 1) routeFrom = routeTo;
-    if (animating() || transition < 1 || Math.abs(pointer.amount - pointerGoal) > 0.01) kick();
+    if (animating() || transition < 1 || pulseAge < PULSE_S || Math.abs(pointer.amount - pointerGoal) > 0.01) kick();
   }
 
   const handlePointerMove = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return;
-    pointer.targetX = (event.clientX / width) * 2 * aspect - aspect;
-    pointer.targetY = 1 - (event.clientY / height) * 2;
+    [pointer.targetX, pointer.targetY] = toWorld(event.clientX, event.clientY);
     pointer.targetAmount = 1;
     kick();
+  };
+  const toWorld = (clientX: number, clientY: number) => [
+    (clientX / width) * 2 * aspect - aspect,
+    1 - (clientY / height) * 2,
+  ];
+  function pulse(clientX = Math.random() * width, clientY = Math.random() * height) {
+    if (reducedMotion) return;
+    const slot = pulses[nextPulse];
+    nextPulse = (nextPulse + 1) % PULSE_COUNT;
+    [slot.x, slot.y] = toWorld(clientX, clientY);
+    slot.start = performance.now();
+    kick();
+  }
+  // 링크나 버튼을 누를 때는 터뜨리지 않는다.
+  const handlePointerDown = (event: PointerEvent) => {
+    const target = event.target as Element | null;
+    if (target?.closest('a, button, input, textarea, select, label, [role="button"]')) return;
+    pulse(event.clientX, event.clientY);
   };
   const handlePointerLeave = () => {
     pointer.targetAmount = 0;
@@ -514,6 +562,7 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
     introStart = lastFrame;
     window.addEventListener('scroll', kick, { passive: true });
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
     document.documentElement.addEventListener('pointerleave', handlePointerLeave);
     window.addEventListener('resize', handleResize);
     kick();
@@ -541,6 +590,11 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
       routeStart = now;
       kick();
     },
+    pulse,
+    setStage(value: boolean) {
+      stage = value;
+      kick();
+    },
     setPaused(value: boolean) {
       paused = value;
       lastFrame = performance.now();
@@ -553,6 +607,7 @@ export function createParticleEngine(canvas: HTMLCanvasElement) {
       window.clearTimeout(resizeTimer);
       window.removeEventListener('scroll', kick);
       window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerdown', handlePointerDown);
       document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('webglcontextlost', handleContextLost);

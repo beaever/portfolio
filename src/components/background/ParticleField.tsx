@@ -12,6 +12,9 @@ export function ParticleField() {
   const engineRef = useRef<ReturnType<typeof createParticleEngine>>(null);
   const theme = useThemeStore((state) => state.theme);
   const paused = useMotionStore((state) => state.paused);
+  const live = useMotionStore((state) => state.live);
+  const word = useMotionStore((state) => state.word);
+  const beat = useMotionStore((state) => state.beat);
   const pathname = usePathname();
   const routeIndex = Math.max(
     0,
@@ -35,8 +38,16 @@ export function ParticleField() {
   }, []);
 
   useEffect(() => {
-    engineRef.current?.setRoute(routeIndex);
-  }, [routeIndex]);
+    engineRef.current?.setRoute(live ? word : routeIndex);
+  }, [live, word, routeIndex]);
+
+  useEffect(() => {
+    engineRef.current?.setStage(live);
+  }, [live]);
+
+  useEffect(() => {
+    if (beat) engineRef.current?.pulse();
+  }, [beat]);
 
   useEffect(() => {
     engineRef.current?.refreshTheme();
